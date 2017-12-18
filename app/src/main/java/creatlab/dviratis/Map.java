@@ -32,6 +32,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
+    LocationManager locationManager;
+    static final int REQUEST_LOCATION = 1;
+
+
     //https://www.youtube.com/watch?v=QNb_3QKSmMk
 
     @Override
@@ -46,21 +50,15 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        LatLng sydney = new LatLng(54.7111742, 25.1888387);
+        mMap.setMinZoomPreference(15.0f);
+        mMap.setMaxZoomPreference(20.0f);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
@@ -70,19 +68,36 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     public void goToHelp(View view) {
 
+
         Log.d("Testas!!!", "It works lalla1111!!!!");
 
-        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        boolean enabled = service
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        // check if enabled and if not send user to the GSP settings
-        // Better solution would be to display a dialog and suggesting to
-        // go to the settings
-        if (!enabled) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+        } else {
+
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null) {
+                double lati = location.getLatitude();
+                double longi = location.getLongitude();
+
+                String latitude = Double.toString(lati);
+                String longitude = Double.toString(longi);
+
+                Log.d("YOUR LATITUDE:", latitude);
+                Log.d("YOUR LONGITUDE:",longitude);
+                Log.d("IT WORKS!!!!:",longitude);
+
+            } else {
+                //need something to write here
+            }
+
+
         }
 
 
