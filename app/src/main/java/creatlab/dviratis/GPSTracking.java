@@ -55,9 +55,7 @@ public class GPSTracking {
 
             }
             else{
-
-                throw new AssertionError("Incorrect parameter in GeoPosition");
-
+                log.Assert("Incorrect parameter in GeoPosition");
             }
 
         }
@@ -65,42 +63,6 @@ public class GPSTracking {
         return val;
 
     }
-
-
-    public double Latitude(){
-
-        double val = 0;
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-
-        if (checkLocationPermission()){
-
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            val = location.getLatitude();
-            log.Print(0, "getLatitude "+val);
-        }
-
-        return val;
-
-    }
-
-
-    public double Longitude(){
-
-        double val = 0;
-
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        if (checkLocationPermission()){
-
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            val = location.getLongitude();
-            log.Print(0, "getLongitude "+val);
-        }
-
-        return val;
-
-    }
-
-
 
 
 

@@ -32,16 +32,12 @@ public class Logs {
     }
 
     public void Assert(String txt){
-
         if (Logs) {
-
             throw new AssertionError(txt);
-
         }
         else{
             Log.i(ERROR_LOG_TAG, txt);
         }
-
     }
 
 
