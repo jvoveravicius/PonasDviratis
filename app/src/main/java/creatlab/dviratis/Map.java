@@ -21,6 +21,10 @@ import java.util.Set;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback {
 
+    //https://developer.android.com/guide/topics/ui/ui-events.html
+    //https://stackoverflow.com/questions/4597690/android-timer-how-to
+
+
     private GoogleMap mMap;
     private SharedPreferences SaveData;
 
@@ -66,6 +70,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         }
 
     }
+
+
 
 
 
@@ -124,7 +130,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         SaveMapData();
 
     }
-
 
     public void goToMainActivity(View view) {
 
