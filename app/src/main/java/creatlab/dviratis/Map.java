@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,8 +24,9 @@ import java.util.Set;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback {
 
+    //https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
 
-
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private GoogleMap mMap;
     private SharedPreferences SaveData;
@@ -60,8 +62,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
             Fragment ExplFrag = new PermissionsExplanationFragment();
             FragmentTransaction transaction2 = getFragmentManager().beginTransaction();
-            transaction2.replace(R.id.map, ExplFrag); // fragment container id in first parameter is the  container(Main layout id) of Activity
-            transaction2.addToBackStack(null);  // this will manage backstack
+            transaction2.replace(R.id.map, ExplFrag);
+            transaction2.addToBackStack(null);
             transaction2.commit();
 
             Log.Print(0, "Adjusted buttons visibility");
@@ -160,13 +162,30 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
+
     public void goToTakePicture(View view) {
 
         SaveMapData();
+        dispatchTakePictureIntent();
 
+        //Intent myIntent = new Intent(Map.this, SendActivity.class);
+        //Map.this.startActivity(myIntent);
 
 
     }
+
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+
+        }
+    }
+
+
 
 
 
