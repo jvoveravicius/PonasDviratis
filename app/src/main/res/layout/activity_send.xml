@@ -12,9 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/closeSendActivity"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="103dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="21dp"
         android:minHeight="300dp"
         android:minWidth="300dp"
         tools:layout_editor_absoluteX="42dp"
@@ -29,6 +28,26 @@
         android:layout_marginEnd="39dp"
         android:onClick="goToMapActivity"
         android:text="Uždaryti" />
+
+    <TextView
+        android:id="@+id/MainTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/buckysImageView"
+        android:layout_below="@+id/closeSendActivity"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/sendData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
+        android:onClick="sendData"
+        android:text="Siusti" />
 
 
 </RelativeLayout>

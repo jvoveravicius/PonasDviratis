@@ -42,6 +42,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     private SharedPreferences SaveData;
 
     ImageView buckysImageView;
+    CountDownTimer UpdateLocationCountDownTimer;
 
 
     private static final int CAMERA_REQUEST = 1888; // field
@@ -138,8 +139,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     public void UpdateMarker(){
 
+        UpdateLocationCountDownTimer = new CountDownTimer(30000, 1000){
 
-        new CountDownTimer(30000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 Log.Print(0, "Seconds remaining before next update: " + millisUntilFinished / 1000);
@@ -161,6 +162,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
                 UpdateMarker();//padariau rekursija
             }
         }.start();
+
 
 
     }
@@ -207,6 +209,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     public void goToCapture(View view) {
 
         SaveMapData();
+        UpdateLocationCountDownTimer.cancel();
         Intent myIntent = new Intent(Map.this, SendActivity.class);
         Map.this.startActivity(myIntent);
 
