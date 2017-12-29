@@ -42,11 +42,6 @@
         <activity
             android:name=".Map"
             android:label="@string/title_activity_map" />
-        <activity
-            android:name=".Trash"
-            android:label="@string/title_activity_gpstracker"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ExplanationActivity"></activity>
     </application>
 
 </manifest>

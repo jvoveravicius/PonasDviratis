@@ -41,6 +41,16 @@
         android:onClick="goToTakePicture"
         android:text="Take Picture" />
 
+    <Button
+        android:id="@+id/btnUnderstood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:onClick="goToMainActivity"
+        android:text="Supratau" />
+
 
 
 </RelativeLayout>
