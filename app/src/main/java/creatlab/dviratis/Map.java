@@ -1,14 +1,23 @@
 package creatlab.dviratis;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,6 +26,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,12 +37,14 @@ import java.util.Set;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback {
 
-    //https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private GoogleMap mMap;
     private SharedPreferences SaveData;
+
+    ImageView buckysImageView;
+
+
+    private static final int CAMERA_REQUEST = 1888; // field
 
     public static String TicketData = "TicketData";
     private static String  MarkerText = "Jūsų pozicija";
@@ -40,19 +55,24 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        buckysImageView = findViewById(R.id.buckysImageView);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //visibilities
         findViewById(R.id.btnUnderstood).setVisibility(View.INVISIBLE);
+
+        //visibilities
 
 
         if (!Gps.checkLocationPermission()){
@@ -66,19 +86,22 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
             transaction2.addToBackStack(null);
             transaction2.commit();
 
+            //visibilities
             Log.Print(0, "Adjusted buttons visibility");
             findViewById(R.id.btnGoToHelp).setVisibility(View.INVISIBLE);
             findViewById(R.id.btnGoTakePict).setVisibility(View.INVISIBLE);
             findViewById(R.id.btnUnderstood).setVisibility(View.VISIBLE);
+            //visibilities
 
         }
+
+
+
+
 
         UpdateMarker();
 
     }
-
-
-
 
 
     @Override
@@ -142,6 +165,25 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     }
 
+    public void takePicture(View view) {
+
+        SaveMapData();
+        Intent cameraIntent = new  Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this
+            buckysImageView.setImageBitmap(picture); //for example I put bmp in an ImageView
+        }
+    }
+
 
 
     public void goToHelp(View view) {
@@ -162,30 +204,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
-
-    public void goToTakePicture(View view) {
+    public void goToCapture(View view) {
 
         SaveMapData();
-        dispatchTakePictureIntent();
-
-        //Intent myIntent = new Intent(Map.this, SendActivity.class);
-        //Map.this.startActivity(myIntent);
+        Intent myIntent = new Intent(Map.this, SendActivity.class);
+        Map.this.startActivity(myIntent);
 
 
     }
-
-
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
-
-        }
-    }
-
-
 
 
 
