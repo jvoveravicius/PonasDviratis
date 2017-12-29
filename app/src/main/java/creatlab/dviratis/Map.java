@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.View;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +19,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 
 
 public class Map extends FragmentActivity implements OnMapReadyCallback {
@@ -28,12 +33,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private SharedPreferences SaveData;
 
-    public static String fileName = "SystemData";
     public static String TicketData = "TicketData";
-    public String settingsValue = "boolCheckPermissions";
+    private static String  MarkerText = "Jūsų pozicija";
+
 
     Logs Log = new Logs();
     GPSTracking Gps = new GPSTracking(this);
+
 
 
 
@@ -69,6 +75,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
         }
 
+        UpdateMarker();
+
     }
 
 
@@ -78,11 +86,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+
+
         //----Main Settings
         float MinZoom = 15.00f;
         float MaxZoom = 20.00f;
-        String MarkerText = "Jūsų pozicija";
         //----Main Settings
+
 
 
         Log.Print(0, "Initialised latitude = " + Gps.GeoPosition('a'));
@@ -100,7 +110,37 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)
                 ));
 
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+
+
+    }
+
+    public void UpdateMarker(){
+
+
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.Print(0, "Seconds remaining before next update: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                Log.Print(0, "Coordinates updated to "+Gps.GeoPosition('a')+" "+Gps.GeoPosition('b'));
+
+                LatLng myPosition = new LatLng(Gps.GeoPosition('a'), Gps.GeoPosition('b'));
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions()
+
+                        .position(myPosition).title(MarkerText)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)
+                        ));
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+
+                UpdateMarker();//padariau rekursija
+            }
+        }.start();
 
 
     }
@@ -129,7 +169,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
         SaveMapData();
 
+
+
     }
+
+
 
     public void goToMainActivity(View view) {
 
