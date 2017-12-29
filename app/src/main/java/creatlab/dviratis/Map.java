@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.View;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,15 +18,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Handler;
+
 
 
 public class Map extends FragmentActivity implements OnMapReadyCallback {
 
-    //https://developer.android.com/guide/topics/ui/ui-events.html
-    //https://stackoverflow.com/questions/4597690/android-timer-how-to
+
 
 
     private GoogleMap mMap;
@@ -85,7 +81,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
 
 
         //----Main Settings
