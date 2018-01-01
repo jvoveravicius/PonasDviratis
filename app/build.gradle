@@ -16,11 +16,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/java/kakkakakakak'] } }
+    sourceSets {
+        main { java.srcDirs = ['src/main/java', 'src/main/java/kakkakakakak'] }
+        debug {
+            res.srcDirs = ['src/debug/res', 'src/debug/res/filepaths']
+            assets.srcDirs = ['src/debug/assets', 'src/debug/assets/']
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.android.gms:play-services-maps:11.6.2'
