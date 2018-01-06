@@ -249,6 +249,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     public void SaveMapData() {
 
         SaveData = getSharedPreferences(TicketData, 0);
+
         SaveData.getStringSet(TicketData, null);
 
         Set<String> mySet = new HashSet<String>();

@@ -1,7 +1,6 @@
 package creatlab.dviratis;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
@@ -9,13 +8,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.HashSet;
+
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_PERMISSION = 1;
 
     Logs Log = new Logs();
     GPSTracking GPS = new GPSTracking(this);
+    SaveData Save = new SaveData(this);
+
     CountDownTimer DelayTick;
+
 
 
     @Override
@@ -23,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CheckPermissions();
+        //CallPermissions();
+
+
+       //SaveData("TestData",  mySet);
 
     }
 
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            goToMap();
+            ShowPermissionsInformation();
 
         }
 
@@ -55,13 +62,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void goToPermissions(){
 
-    private void CheckPermissions(){
+        Intent myIntent = new Intent(MainActivity.this, PermissionsActivity.class);
+        MainActivity.this.startActivity(myIntent);
+
+    }
+
+
+    private void CallPermissions(){
 
 
         short it = 0;
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (!GPS.checkLocationPermission()) {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
 
@@ -71,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             it++;
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (!Save.checkExternalStoragePermission()) {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
 
@@ -93,13 +107,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void ShowInformationPermissions(){
+    private void ShowPermissionsInformation(){
 
         if (!GPS.checkLocationPermission()){
 
+            goToPermissions();
 
         }
+        else if (!Save.checkExternalStoragePermission()){
 
+            goToPermissions();
+
+        }
+        else{
+
+            goToMap();
+
+        }
 
     }
 
@@ -117,8 +141,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
 
                 Log.Print(0, "Start activity ");
-                Intent myIntent = new Intent(MainActivity.this, Map.class);
-                MainActivity.this.startActivity(myIntent);
+                goToMap();
 
             }
 
