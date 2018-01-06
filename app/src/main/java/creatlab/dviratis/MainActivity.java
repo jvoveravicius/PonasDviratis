@@ -29,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //CallPermissions();
 
-
-       //SaveData("TestData",  mySet);
+        //save data test
+        String[] toppings = {"Cheese", "Pepperoni", "Black Olives"};
+        Save.SaveStringArrayData("TestData",  toppings);
+        Save.LoadStringArrayData("TestData", toppings.length);
 
     }
 
