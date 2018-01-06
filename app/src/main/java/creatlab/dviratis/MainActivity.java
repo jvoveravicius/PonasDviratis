@@ -10,11 +10,11 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final int REQUEST_LOCATION = 1;
+    static final int REQUEST_PERMISSION = 1;
 
-    CountDownTimer StartTick;
 
     Logs Log = new Logs();
+    CountDownTimer DelayTick;
 
 
     @Override
@@ -22,42 +22,14 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        short it = 0;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-
-        }
-        else{
-            it++;
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_LOCATION);
-
-        }
-        else{
-            it++;
-        }
-
-        if (it == 2){
-
-            Log.Print(0, "All permission was granted!");
-            Delay();
-
-        }
-
+        Permissions();
 
     }
 
 
-    //callback from permission
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-        if (requestCode == REQUEST_LOCATION) {
+        if (requestCode == REQUEST_PERMISSION) {
 
             if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -75,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void goToMap() {
+    private void goToMap() {
 
         Intent myIntent = new Intent(MainActivity.this, Map.class);
         MainActivity.this.startActivity(myIntent);
@@ -83,9 +55,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void Permissions(){
+
+
+        short it = 0;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
+
+        }
+        else{
+
+            it++;
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+
+        }
+        else{
+
+            it++;
+
+        }
+
+        if (it == 2){
+
+            Log.Print(0, "All permission was granted!");
+            Delay();
+
+        }
+
+
+    }
+
     private void Delay(){
 
-        StartTick = new CountDownTimer(1000, 800){
+
+        DelayTick = new CountDownTimer(1000, 800){
 
             public void onTick(long millisUntilFinished) {
 
@@ -104,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
         }.start();
 
     }
-
-
 
 
 }

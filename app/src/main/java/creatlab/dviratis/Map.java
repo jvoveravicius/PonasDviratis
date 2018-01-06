@@ -76,7 +76,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         //visibilities
 
 
-
+        //Patikrinimas apie interneta
+        //Papildomas dialogas
         if (!Gps.checkLocationPermission() || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
             Log.Print(0, "Permission False, access denied");
