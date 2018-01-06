@@ -1,6 +1,7 @@
 package creatlab.dviratis;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
@@ -12,8 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_PERMISSION = 1;
 
-
     Logs Log = new Logs();
+    GPSTracking GPS = new GPSTracking(this);
     CountDownTimer DelayTick;
 
 
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Permissions();
+        CheckPermissions();
 
     }
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void Permissions(){
+    private void CheckPermissions(){
 
 
         short it = 0;
@@ -85,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
 
             Log.Print(0, "All permission was granted!");
             Delay();
+
+        }
+
+
+    }
+
+
+    private void ShowInformationPermissions(){
+
+        if (!GPS.checkLocationPermission()){
+
 
         }
 
