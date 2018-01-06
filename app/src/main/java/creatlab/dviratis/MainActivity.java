@@ -13,6 +13,7 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_PERMISSION = 1;
+    private static String  PPERMISSION_DATA = "PermissionData";
 
     Logs Log = new Logs();
     GPSTracking GPS = new GPSTracking(this);
@@ -27,12 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //CallPermissions();
+        CallPermissions();
 
-        //save data test
-        String[] toppings = {"Cheese", "Pepperoni", "Black Olives"};
-        Save.SaveStringArrayData("TestData",  toppings);
-        Save.LoadStringArrayData("TestData", toppings.length);
 
     }
 
@@ -111,21 +108,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void ShowPermissionsInformation(){
 
+        String[] Permissions = {"0", "0"};
+
+
         if (!GPS.checkLocationPermission()){
 
             goToPermissions();
+            Permissions[0] = "1";
 
         }
         else if (!Save.checkExternalStoragePermission()){
 
             goToPermissions();
+            Permissions[1] = "1";
 
         }
         else{
 
             goToMap();
-
+            
         }
+
+        Save.SaveStringArrayData(PPERMISSION_DATA,  Permissions);
 
     }
 
