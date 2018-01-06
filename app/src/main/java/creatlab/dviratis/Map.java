@@ -1,5 +1,6 @@
 package creatlab.dviratis;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -7,16 +8,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,11 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,9 +55,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     GPSTracking Gps = new GPSTracking(this);
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
@@ -72,14 +72,15 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
         //visibilities
         findViewById(R.id.btnUnderstood).setVisibility(View.INVISIBLE);
-
+        findViewById(R.id.BtnGoToMap).setVisibility(View.INVISIBLE);
         //visibilities
 
 
-        if (!Gps.checkLocationPermission()){
+
+        if (!Gps.checkLocationPermission() || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
             Log.Print(0, "Permission False, access denied");
-            Log.Print(0, "Go to Explanation Activity");
+            Log.Print(0, "Go to Explanation fragment");
 
             Fragment ExplFrag = new PermissionsExplanationFragment();
             FragmentTransaction transaction2 = getFragmentManager().beginTransaction();
@@ -94,11 +95,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
             findViewById(R.id.btnUnderstood).setVisibility(View.VISIBLE);
             //visibilities
 
+
         }
-
-
-
-
 
         UpdateMarker();
 
@@ -128,7 +126,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions()
 
                 .position(myPosition).title(MarkerText)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
                 ));
 
 
@@ -136,6 +134,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
 
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            // do something on back.
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     public void UpdateMarker(){
 
@@ -154,7 +162,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
                 mMap.addMarker(new MarkerOptions()
 
                         .position(myPosition).title(MarkerText)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
                         ));
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
@@ -163,15 +171,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
             }
         }.start();
 
-
-
-    }
-
-    public void takePicture(View view) {
-
-        SaveMapData();
-        Intent cameraIntent = new  Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
 
 
     }
@@ -190,26 +189,33 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     public void goToHelp(View view) {
 
+        final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
+        findViewById(R.id.btnGoToHelp).setAnimation(a);
+        view.startAnimation(a);
 
-        SaveData = getSharedPreferences(TicketData, 0);
+        findViewById(R.id.btnGoToHelp).setVisibility(View.INVISIBLE);
+        findViewById(R.id.BtnGoToMap).setVisibility(View.VISIBLE);
 
-        Set<String> numbers = new HashSet<String>();
-        numbers = SaveData.getStringSet(TicketData, null);
+        Log.Print(0, "Go to Help fragment");
 
-        if (numbers!=null){
-            for (String num : numbers){
-                Log.Print(0, num);
-            }
-        }
-
+        Fragment HFragment = new HelpFragment();
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        t.replace(R.id.map, HFragment);
+        t.addToBackStack(null);
+        t.commit();
 
     }
 
 
     public void goToCapture(View view) {
 
+        final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
+        findViewById(R.id.btnGoTakePict).setAnimation(a);
+        view.startAnimation(a);
+
         SaveMapData();
         UpdateLocationCountDownTimer.cancel();
+
         Intent myIntent = new Intent(Map.this, SendActivity.class);
         Map.this.startActivity(myIntent);
 
@@ -225,14 +231,28 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     }
 
+    public void goToMap(View view) {
+
+
+        final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
+        findViewById(R.id.BtnGoToMap).setAnimation(a);
+        view.startAnimation(a);
+
+        findViewById(R.id.BtnGoToMap).setVisibility(View.VISIBLE);
+        Intent myIntent = new Intent(Map.this, Map.class);
+        Map.this.startActivity(myIntent);
+
+
+    }
+
     public void SaveMapData() {
 
         SaveData = getSharedPreferences(TicketData, 0);
         SaveData.getStringSet(TicketData, null);
 
         Set<String> mySet = new HashSet<String>();
-        mySet.add("Koordinatės: "+Gps.GeoPosition('a')+" šiaurės platumos ir "+Gps.GeoPosition('b')+" rytų ilgumos");
-        mySet.add("Adresas: "+ Gps.GeoCoder());
+        mySet.add("Koordinatės Vilniaus mieste:\n"+Gps.GeoPosition('a')+" š. plat. ir "+Gps.GeoPosition('b')+" r. ilg.\n");
+        mySet.add("Artimiausias adresas:\n"+ Gps.GeoCoder());
 
 
         SharedPreferences.Editor editor = SaveData.edit();

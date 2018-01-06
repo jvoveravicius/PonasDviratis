@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#5dad07"
+    android:background="#e6e1d5"
     tools:context="creatlab.dviratis.Map">
+
 
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,39 +18,64 @@
         android:layout_height="match_parent"
 
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         tools:context="creatlab.dviratis.Map" />
 
 
-    <Button
-        android:id="@+id/btnGoToHelp"
+
+    <View
+        android:id="@+id/view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="24dp"
-        android:layout_toEndOf="@+id/btnGoTakePict"
-        android:onClick="goToHelp"
-        android:text="Help" />
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#5dae06" />
+
 
     <Button
         android:id="@+id/btnGoTakePict"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:onClick="goToCapture"
-        android:text="Take Picture" />
+        android:layout_marginBottom="23dp"
+        android:background="@drawable/takepicturebtn"
+        android:onClick="goToCapture"/>
+
+    <Button
+        android:id="@+id/btnGoToHelp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/exclamation"
+        android:onClick="goToHelp" />
+
+
+    <Button
+        android:id="@+id/BtnGoToMap"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:background="@drawable/ok"
+        android:onClick="goToMap"/>
+
+
 
     <Button
         android:id="@+id/btnUnderstood"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:onClick="goToMainActivity"
-        android:text="Supratau" />
+        android:layout_marginBottom="23dp"
+        android:background="@drawable/ok"
+        android:onClick="goToMainActivity"/>
+
 
 
 

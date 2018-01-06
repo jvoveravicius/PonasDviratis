@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -20,12 +21,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -41,8 +43,13 @@
 
         <activity
             android:name=".Map"
-            android:label="@string/title_activity_map" />
-        <activity android:name=".SendActivity"></activity>
+            android:label="@string/title_activity_map"
+            android:screenOrientation="portrait"/>
+
+
+        <activity android:name=".SendActivity" android:screenOrientation="portrait"></activity>
+
+
 
 
         <provider
@@ -54,6 +61,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
 
+        </provider>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="creatlab.dviratis"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"></meta-data>
         </provider>
 
 

@@ -23,16 +23,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        short it = 0;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
-        } else {
+        }
+        else{
+            it++;
+        }
 
-            Log.Print(0, "Location permission was granted!");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_LOCATION);
+
+        }
+        else{
+            it++;
+        }
+
+        if (it == 2){
+
+            Log.Print(0, "All permission was granted!");
             Delay();
 
         }
+
 
     }
 

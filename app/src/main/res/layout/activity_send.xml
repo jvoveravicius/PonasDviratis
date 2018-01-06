@@ -3,51 +3,127 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#5dad07"
+    android:background="#f0ede5"
     android:layout_height="match_parent"
     tools:context="creatlab.dviratis.SendActivity">
 
+    <Button
+        android:id="@+id/closeSendActivity"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/close"
+        android:onClick="goToMapActivity" />
+
+    <Button
+        android:id="@+id/sendEmail"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/send"
+        android:onClick="sendData" />
+
+    <View
+        android:id="@+id/viewSend"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="#5dae06" />
+
+
     <ImageView
         android:id="@+id/buckysImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="21dp"
-        android:minHeight="300dp"
-        android:minWidth="300dp"
+        android:layout_width="192dp"
+        android:layout_height="256dp"
+        android:layout_below="@+id/radio"
+        android:layout_centerHorizontal="true"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="91dp" />
 
-    <Button
-        android:id="@+id/closeSendActivity"
+
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/buckysImageView"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="39dp"
-        android:onClick="goToMapActivity"
-        android:text="Uždaryti" />
+        android:layout_alignTop="@+id/ExplanationTextView"
+        android:id="@+id/radio"
+        android:checked="true"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:checkedButton="@+id/medium">
+
+        <RadioButton
+            android:id="@+id/high"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:buttonTint="@android:color/black"
+            android:layout_alignBottom="@+id/closeSendActivity"
+            android:text="Aukštas"
+            android:textColor="@android:color/black" />
+
+        <RadioButton
+            android:id="@+id/medium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/radio"
+            android:layout_centerHorizontal="true"
+            android:buttonTint="@android:color/black"
+            android:text="Vidutinis"
+            android:textColor="@android:color/black" />
+
+        <RadioButton
+            android:id="@+id/low"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:buttonTint="@android:color/black"
+            android:text="Žemas"
+            android:textColor="@android:color/black" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/ExplanationTextView"
+        android:layout_width="140pt"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/closeSendActivity"
+        android:layout_alignBottom="@+id/closeSendActivity"
+        android:layout_centerHorizontal="true"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/MainTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/buckysImageView"
+        android:layout_alignStart="@+id/priority"
         android:layout_below="@+id/closeSendActivity"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@android:color/background_dark"
+        android:textSize="8sp" />
 
-    <Button
-        android:id="@+id/sendEmail"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignBottom="@+id/buckysImageView"
+        android:layout_toStartOf="@+id/closeSendActivity"
+        app:srcCompat="@drawable/warning_sign" />
+
+    <TextView
+        android:id="@+id/priority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp"
-        android:onClick="sendData"
-        android:text="Siusti" />
+        android:layout_above="@+id/buckysImageView"
+        android:layout_alignStart="@+id/ExplanationTextView"
+        android:layout_marginBottom="31dp"
+        android:text="Kritiškumas:"
+        android:textColor="@android:color/black" />
 
 
 </RelativeLayout>
