@@ -8,12 +8,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_PERMISSION = 1;
-    private static String  PPERMISSION_DATA = "PermissionData";
+    public final String  PPERMISSION_DATA = "PermissionData";
+    public String[] Permissions = {"GPS0", "EX0"};
+
 
     Logs Log = new Logs();
     GPSTracking GPS = new GPSTracking(this);
@@ -22,14 +23,12 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer DelayTick;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CallPermissions();
-
 
     }
 
@@ -40,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
             if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                Log.Print(0, "Permission has been granted");
+                Log.Print(0, permissions+ " [Permission has been granted]");
 
             } else {
 
-                Log.Print(0, "Permission has been denied");
+                Log.Print(0, permissions+ " [Permission has been denied]");
 
             }
 
@@ -108,28 +107,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void ShowPermissionsInformation(){
 
-        String[] Permissions = {"0", "0"};
+
+        boolean Result = false;
 
 
         if (!GPS.checkLocationPermission()){
-
-            goToPermissions();
-            Permissions[0] = "1";
-
+            Permissions[0] = "GPS1";
+            Result = true;
         }
-        else if (!Save.checkExternalStoragePermission()){
+
+        if (!Save.checkExternalStoragePermission()){
+            Permissions[1] = "EX1";
+            Result = true;
+        }
+
+
+        Save.SaveStringArrayData(PPERMISSION_DATA,  Permissions);
+
+
+
+        if (Result){
+
 
             goToPermissions();
-            Permissions[1] = "1";
 
         }
         else{
 
             goToMap();
-            
+
         }
 
-        Save.SaveStringArrayData(PPERMISSION_DATA,  Permissions);
 
     }
 

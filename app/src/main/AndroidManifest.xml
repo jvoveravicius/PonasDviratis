@@ -74,6 +74,7 @@
 
         <activity
             android:name=".PermissionsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_permissions"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
