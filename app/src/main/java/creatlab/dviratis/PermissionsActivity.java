@@ -36,6 +36,12 @@ public class PermissionsActivity extends AppCompatActivity {
 
             Log.Print(0, AllPermissions[0]+ " not equal " + Main.Permissions[1]);
 
+            Fragment fragment= new ExternalStoragePermissionFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.PermissionFragment, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
         }
 
         if (!AllPermissions[1].equals(Main.Permissions[0])){
