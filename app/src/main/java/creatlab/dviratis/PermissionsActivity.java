@@ -30,7 +30,9 @@ public class PermissionsActivity extends AppCompatActivity {
         String AllPermissions[] = Save.LoadStringArrayData(Main.PPERMISSION_DATA, Main.Permissions.length);
 
         Log.Print(0, "Result " + AllPermissions[0]);
-        Log.Print(0, "Result " + AllPermissions[1]);
+
+
+
 
         if (!AllPermissions[0].equals(Main.Permissions[1])){
 
@@ -49,6 +51,18 @@ public class PermissionsActivity extends AppCompatActivity {
             Log.Print(0, AllPermissions[1]+"Not equal " + Main.Permissions[0]);
 
             Fragment fragment= new GPSPermissionFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.PermissionFragment, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+        }
+
+        if (!AllPermissions[2].equals(Main.Permissions[2])){
+
+            Log.Print(0, AllPermissions[2]+"Not equal " + Main.Permissions[2]);
+
+            Fragment fragment= new NoInternetFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.PermissionFragment, fragment);
             transaction.addToBackStack(null);

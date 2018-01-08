@@ -3,6 +3,7 @@ package creatlab.dviratis;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_PERMISSION = 1;
     public final String  PPERMISSION_DATA = "PermissionData";
-    public String[] Permissions = {"GPS0", "EX0"};
+    public String[] Permissions = {"GPS0", "EX0", "IN0"};
 
 
     Logs Log = new Logs();
@@ -65,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = new Intent(MainActivity.this, PermissionsActivity.class);
         MainActivity.this.startActivity(myIntent);
 
+    }
+
+    private boolean isNetworkConnected() {
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
 
@@ -121,6 +129,14 @@ public class MainActivity extends AppCompatActivity {
             Result = true;
         }
 
+        if (!isNetworkConnected()){
+
+            Log.Print(0, "No internet connection");
+            Permissions[2] = "IN1";
+            Result = true;
+
+        }
+
 
         Save.SaveStringArrayData(PPERMISSION_DATA,  Permissions);
 
@@ -134,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
 
-            goToMap();
+             goToMap();
 
         }
 
@@ -154,8 +170,20 @@ public class MainActivity extends AppCompatActivity {
 
             public void onFinish() {
 
-                Log.Print(0, "Start activity ");
-                goToMap();
+                if (isNetworkConnected()){
+
+                    Log.Print(0, "Start activity ");
+                    goToMap();
+
+                }
+                else{
+
+                    Log.Print(0, "No internet connection");
+                    Permissions[2] = "IN1";
+                    Save.SaveStringArrayData(PPERMISSION_DATA,  Permissions);
+                    goToPermissions();
+
+                }
 
             }
 
