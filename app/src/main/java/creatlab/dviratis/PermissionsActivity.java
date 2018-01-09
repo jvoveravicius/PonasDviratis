@@ -2,12 +2,12 @@ package creatlab.dviratis;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 public class PermissionsActivity extends AppCompatActivity {
 
@@ -16,61 +16,141 @@ public class PermissionsActivity extends AppCompatActivity {
     MainActivity Main = new MainActivity();
 
 
+    private boolean GPS = false;
+    private boolean Ext = false;
+    private boolean Int = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permissions);
-        ApplyPermissionFragment();
+        GetAllPermissions();
+        ApplyAllPermissions();
 
     }
 
-    private void ApplyPermissionFragment(){
+
+    public void goToTest(View view) {
+
+        final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
+        findViewById(R.id.bntPermissionOkay).setAnimation(a);
+        view.startAnimation(a);
+
+        ApplyAllPermissions();
+
+    }
+
+    public void ApplyAllPermissions(){
+
+        if (GPS){
+
+            Log.Print(0, "GPS Permission was activated");
+            GPS = false;
+
+            Log.Print(0, "Go to GPSPermissionFragment");
+
+            Fragment f = new GPSPermissionFragment();
+            FragmentTransaction t = getFragmentManager().beginTransaction();
+            t.replace(R.id.PermissionFragment, f);
+            t.addToBackStack(null);
+            t.commit();
+
+
+        }
+        else if (Ext){
+
+            Log.Print(0, "External storage permission was activated");
+            Ext = false;
+
+            Log.Print(0, "Go to ExternalStoragePermissionFragment");
+            Fragment f = new ExternalStoragePermissionFragment();
+            FragmentTransaction t = getFragmentManager().beginTransaction();
+            t.replace(R.id.PermissionFragment, f);
+            t.addToBackStack(null);
+            t.commit();
+
+        }
+        else if (Int){
+
+            Log.Print(0, "No internet is permission is activated");
+            Int = false;
+
+            Log.Print(0, "Go to NoInternetFragment");
+            Fragment f = new NoInternetFragment();
+            FragmentTransaction t = getFragmentManager().beginTransaction();
+            t.replace(R.id.PermissionFragment, f);
+            t.addToBackStack(null);
+            t.commit();
+
+
+        }
+        else{
+
+            Log.Print(0, "No more permissions");
+
+            Intent myIntent = new Intent(PermissionsActivity.this, MainActivity.class);
+            PermissionsActivity.this.startActivity(myIntent);
+
+        }
+
+
+    }
+
+    private void GetAllPermissions(){
+
 
         String AllPermissions[] = Save.LoadStringArrayData(Main.PPERMISSION_DATA, Main.Permissions.length);
 
-        Log.Print(0, "Result " + AllPermissions[0]);
+
+        int l = Main.Permissions.length;
 
 
+        for (int i =0; i<l;i++){
+
+            boolean Activate = true;
+
+            for (int z = 0; z< l; z++){
+
+                if (Main.Permissions[i].equals(AllPermissions[z])){
+
+                    Log.Print(0, "Fine with: "+Main.Permissions[i]);
+                    Activate = false;
+                    continue;
+
+                }
+
+            }
+
+            if (Activate){
+
+                switch (i) {
+                    case 0:
+                        GPS = true;
+                        break;
+                    case 1:
+                        Ext = true;
+                        break;
+                    case 2:
+                        Int = true;
+                        break;
+                    default:
+                        Log.Assert("Invalid Main.Permissions.length");
+                        break;
+                }
 
 
-        if (!AllPermissions[0].equals(Main.Permissions[1])){
+            }
 
-            Log.Print(0, AllPermissions[0]+ " not equal " + Main.Permissions[1]);
-
-            Fragment fragment= new ExternalStoragePermissionFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.PermissionFragment, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-        }
-
-        if (!AllPermissions[1].equals(Main.Permissions[0])){
-
-            Log.Print(0, AllPermissions[1]+"Not equal " + Main.Permissions[0]);
-
-            Fragment fragment= new GPSPermissionFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.PermissionFragment, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-        }
-
-        if (!AllPermissions[2].equals(Main.Permissions[2])){
-
-            Log.Print(0, AllPermissions[2]+"Not equal " + Main.Permissions[2]);
-
-            Fragment fragment= new NoInternetFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.PermissionFragment, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
 
         }
 
 
     }
 
+
+
 }
+
+
