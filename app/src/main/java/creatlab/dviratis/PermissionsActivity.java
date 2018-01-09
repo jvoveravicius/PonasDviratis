@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 public class PermissionsActivity extends AppCompatActivity {
 
@@ -18,7 +19,6 @@ public class PermissionsActivity extends AppCompatActivity {
     Fragment GPSFragment = new GPSPermissionFragment();
     Fragment NoInternetFragment = new NoInternetFragment();
     Fragment ExterStorageFragment = new ExternalStoragePermissionFragment();
-
 
 
     private boolean GPS = false;
@@ -33,6 +33,7 @@ public class PermissionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_permissions);
         GetAllPermissions();
         ApplyAllPermissions();
+
 
     }
 
@@ -59,7 +60,6 @@ public class PermissionsActivity extends AppCompatActivity {
             t.replace(R.id.PermissionFragment, GPSFragment);
             t.addToBackStack(null);
             t.commit();
-
 
 
         }

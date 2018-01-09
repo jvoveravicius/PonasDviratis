@@ -6,13 +6,29 @@
     tools:context="creatlab.dviratis.GPSPermissionFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="17dp"
-        android:text="GPS Permission"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginTop="50dp"
+        android:text="Dėmesio!"
+        android:textColor="@android:color/black"
+        android:textSize="50sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="150dp"
+        android:text="Norėdami naudotis programėlę, turite suteikti leidimą nustatytį Jūsų mobiliojo įrenginio geografinę poziciją. Tai reikalinga tam, kad būtų nurodoma tiksli dviračių tako kliūties vieta suformuluotoje problemoje."
         android:textColor="@android:color/holo_green_dark"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
+
+
 
 </FrameLayout>
