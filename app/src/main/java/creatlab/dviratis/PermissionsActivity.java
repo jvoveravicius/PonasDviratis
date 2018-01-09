@@ -2,8 +2,6 @@ package creatlab.dviratis;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,10 +13,12 @@ public class PermissionsActivity extends AppCompatActivity {
     SaveData Save = new SaveData(this);
     Logs Log = new Logs();
     MainActivity Main = new MainActivity();
+    Transitions GoTo = new Transitions();
 
     Fragment GPSFragment = new GPSPermissionFragment();
     Fragment NoInternetFragment = new NoInternetFragment();
     Fragment ExterStorageFragment = new ExternalStoragePermissionFragment();
+
 
 
     private boolean GPS = false;
@@ -46,13 +46,6 @@ public class PermissionsActivity extends AppCompatActivity {
 
     }
 
-    public void test(Context test, Class c) {
-
-        Intent myIntent = new Intent(test, c);
-        PermissionsActivity.this.startActivity(myIntent);
-
-    }
-
 
     public void ApplyAllPermissions(){
 
@@ -62,11 +55,11 @@ public class PermissionsActivity extends AppCompatActivity {
             GPS = false;
 
             Log.Print(0, "Go to GPSPermissionFragment");
-
             FragmentTransaction t = getFragmentManager().beginTransaction();
             t.replace(R.id.PermissionFragment, GPSFragment);
             t.addToBackStack(null);
             t.commit();
+
 
 
         }
@@ -98,9 +91,8 @@ public class PermissionsActivity extends AppCompatActivity {
         else{
 
             Log.Print(0, "No more permissions");
+            GoTo.ActivityTransitions(this, MainActivity.class);
 
-            Intent myIntent = new Intent(PermissionsActivity.this, MainActivity.class);
-            PermissionsActivity.this.startActivity(myIntent);
 
         }
 

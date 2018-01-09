@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Logs Log = new Logs();
     GPSTracking GPS = new GPSTracking(this);
     SaveData Save = new SaveData(this);
+    Transitions GoTo = new Transitions();
 
     CountDownTimer DelayTick;
 
@@ -144,13 +145,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (Result){
 
-
-            goToPermissions();
+            GoTo.ActivityTransitions(this, PermissionsActivity.class);
 
         }
         else{
 
-             goToMap();
+            GoTo.ActivityTransitions(this, Map.class);
 
         }
 

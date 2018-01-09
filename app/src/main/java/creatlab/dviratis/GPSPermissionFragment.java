@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 
 
+
 public class GPSPermissionFragment extends Fragment {
 
     Logs log = new Logs();
