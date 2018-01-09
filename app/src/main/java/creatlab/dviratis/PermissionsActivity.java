@@ -2,6 +2,7 @@ package creatlab.dviratis;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,10 @@ public class PermissionsActivity extends AppCompatActivity {
     SaveData Save = new SaveData(this);
     Logs Log = new Logs();
     MainActivity Main = new MainActivity();
+
+    Fragment GPSFragment = new GPSPermissionFragment();
+    Fragment NoInternetFragment = new NoInternetFragment();
+    Fragment ExterStorageFragment = new ExternalStoragePermissionFragment();
 
 
     private boolean GPS = false;
@@ -37,10 +42,17 @@ public class PermissionsActivity extends AppCompatActivity {
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.bntPermissionOkay).setAnimation(a);
         view.startAnimation(a);
-
         ApplyAllPermissions();
 
     }
+
+    public void test(Context test, Class c) {
+
+        Intent myIntent = new Intent(test, c);
+        PermissionsActivity.this.startActivity(myIntent);
+
+    }
+
 
     public void ApplyAllPermissions(){
 
@@ -51,9 +63,8 @@ public class PermissionsActivity extends AppCompatActivity {
 
             Log.Print(0, "Go to GPSPermissionFragment");
 
-            Fragment f = new GPSPermissionFragment();
             FragmentTransaction t = getFragmentManager().beginTransaction();
-            t.replace(R.id.PermissionFragment, f);
+            t.replace(R.id.PermissionFragment, GPSFragment);
             t.addToBackStack(null);
             t.commit();
 
@@ -65,9 +76,8 @@ public class PermissionsActivity extends AppCompatActivity {
             Ext = false;
 
             Log.Print(0, "Go to ExternalStoragePermissionFragment");
-            Fragment f = new ExternalStoragePermissionFragment();
             FragmentTransaction t = getFragmentManager().beginTransaction();
-            t.replace(R.id.PermissionFragment, f);
+            t.replace(R.id.PermissionFragment, ExterStorageFragment);
             t.addToBackStack(null);
             t.commit();
 
@@ -78,9 +88,8 @@ public class PermissionsActivity extends AppCompatActivity {
             Int = false;
 
             Log.Print(0, "Go to NoInternetFragment");
-            Fragment f = new NoInternetFragment();
             FragmentTransaction t = getFragmentManager().beginTransaction();
-            t.replace(R.id.PermissionFragment, f);
+            t.replace(R.id.PermissionFragment, NoInternetFragment);
             t.addToBackStack(null);
             t.commit();
 
