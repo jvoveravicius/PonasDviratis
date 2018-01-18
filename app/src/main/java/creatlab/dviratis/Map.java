@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -17,12 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -107,30 +101,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
-        //----Main Settings
         float MinZoom = 15.00f;
-        float MaxZoom = 20.00f;
-        //----Main Settings
-
-
-
         Log.Print(0, "Initialised latitude = " + Gps.GeoPosition('a'));
         Log.Print(0, "Initialised longitude = " + Gps.GeoPosition('b'));
-
-
         LatLng myPosition = new LatLng(Gps.GeoPosition('a'), Gps.GeoPosition('b'));
-
         mMap = googleMap;
         mMap.setMinZoomPreference(MinZoom);
-        mMap.setMaxZoomPreference(MaxZoom);
         mMap.addMarker(new MarkerOptions()
-
                 .position(myPosition).title(MarkerText)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
                 ));
-
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
 
 
@@ -190,14 +170,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     public void goToHelp(View view) {
 
+        Log.Print(0, "Go to Help fragment");
+
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.btnGoToHelp).setAnimation(a);
         view.startAnimation(a);
 
         findViewById(R.id.btnGoToHelp).setVisibility(View.INVISIBLE);
         findViewById(R.id.BtnGoToMap).setVisibility(View.VISIBLE);
-
-        Log.Print(0, "Go to Help fragment");
 
         Fragment HFragment = new HelpFragment();
         FragmentTransaction t = getFragmentManager().beginTransaction();
@@ -255,7 +235,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         Set<String> mySet = new HashSet<String>();
         mySet.add("Koordinatės Vilniaus mieste:\n"+Gps.GeoPosition('a')+" š. plat. ir "+Gps.GeoPosition('b')+" r. ilg.\n");
         mySet.add("Artimiausias adresas:\n"+ Gps.GeoCoder());
-
 
         SharedPreferences.Editor editor = SaveData.edit();
         editor.putStringSet(TicketData,mySet);
