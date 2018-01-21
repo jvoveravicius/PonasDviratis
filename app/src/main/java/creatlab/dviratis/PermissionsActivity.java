@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 public class PermissionsActivity extends AppCompatActivity {
 
@@ -35,10 +34,13 @@ public class PermissionsActivity extends AppCompatActivity {
         ApplyAllPermissions();
 
 
+
     }
 
 
-    public void goToTest(View view) {
+
+    public void RunCheck(View view) {
+
 
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.bntPermissionOkay).setAnimation(a);

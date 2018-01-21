@@ -17,7 +17,6 @@ public class Transitions
 
     public void ActivityTransitions(Context Current, Class New) {
 
-
         Intent myIntent = new Intent(Current, New);
         Current.startActivity(myIntent);
         Log.Print(0, "Activity go to "+New);

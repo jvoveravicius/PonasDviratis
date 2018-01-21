@@ -28,49 +28,32 @@ import java.util.Set;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback {
 
-
     private GoogleMap mMap;
-    private SharedPreferences SaveData;
+    private boolean UpdateInstantMarker = false;
+
+    public SharedPreferences SaveData;
     ImageView ImageView;
     CountDownTimer UpdateLocationCountDownTimer;
 
     public static String TicketData = "TicketData";
-    private static String  MarkerText = "Jūsų pozicija";
+    public static String  MarkerText = "Jūsų pozicija";
     private static final int CAMERA_REQUEST = 1888;
-
+    float MinZoom = 15.00f;
 
     Logs Log = new Logs();
     GPSTracking Gps = new GPSTracking(this);
-
+    Transitions GoTo = new Transitions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        ImageView = findViewById(R.id.buckysImageView);
+        ImageView = findViewById(R.id.SendImageView);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //visibilities
         findViewById(R.id.btnUnderstood).setVisibility(View.INVISIBLE);
         findViewById(R.id.BtnGoToMap).setVisibility(View.INVISIBLE);
-        UpdateMarker();
-    }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        float MinZoom = 15.00f;
-        Log.Print(0, "Initialised latitude = " + Gps.GeoPosition('a'));
-        Log.Print(0, "Initialised longitude = " + Gps.GeoPosition('b'));
-        LatLng myPosition = new LatLng(Gps.GeoPosition('a'), Gps.GeoPosition('b'));
-        mMap = googleMap;
-        mMap.setMinZoomPreference(MinZoom);
-        mMap.addMarker(new MarkerOptions()
-                .position(myPosition).title(MarkerText)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
-                ));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
     }
 
     @Override
@@ -82,25 +65,60 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
-    public void UpdateMarker(){
-        UpdateLocationCountDownTimer = new CountDownTimer(30000, 1000){
+    @Override
+    public void onPause(){
+        super.onPause();
+        UpdateInstantMarker = true;
+        UpdateLocationCountDownTimer.cancel();
+    }
+
+    @Override
+    public void onResume(){
+
+        super.onResume();
+        RunMarkerTick();
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.Print(0, "Initialised latitude = " + Gps.GeoPosition('a'));
+        Log.Print(0, "Initialised longitude = " + Gps.GeoPosition('b'));
+        mMap = googleMap;
+        UpdataMarker();
+    }
+
+    private void UpdataMarker(){
+        Log.Print(0, "Coordinates updated to "+Gps.GeoPosition('a')+" "+Gps.GeoPosition('b'));
+        LatLng myPosition = new LatLng(Gps.GeoPosition('a'), Gps.GeoPosition('b'));
+        mMap.clear();
+        mMap.setMinZoomPreference(MinZoom);
+        mMap.addMarker(new MarkerOptions()
+                .position(myPosition).title(MarkerText)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
+                ));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+    }
+
+
+
+    private void RunMarkerTick(){
+             UpdateLocationCountDownTimer = new CountDownTimer(30000, 1000){
             public void onTick(long millisUntilFinished) {
                 Log.Print(0, "Seconds remaining before next update: " + millisUntilFinished / 1000);
+
+                if (UpdateInstantMarker){
+                    UpdataMarker();
+                    UpdateInstantMarker = false;
+                    Log.Print(0, "Updated marker!");
+                }
+
             }
             public void onFinish() {
-                Log.Print(0, "Coordinates updated to "+Gps.GeoPosition('a')+" "+Gps.GeoPosition('b'));
-                LatLng myPosition = new LatLng(Gps.GeoPosition('a'), Gps.GeoPosition('b'));
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions()
-                        .position(myPosition).title(MarkerText)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
-                        ));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
-                UpdateMarker();
+                UpdataMarker();
+                RunMarkerTick();
             }
         }.start();
-
-
 
     }
 
@@ -109,8 +127,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this
-            ImageView.setImageBitmap(picture); //for example I put bmp in an ImageView
+            Bitmap picture = (Bitmap) data.getExtras().get("data");
+            ImageView.setImageBitmap(picture);
         }
     }
 
@@ -120,11 +138,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
         Log.Print(0, "Go to Help fragment");
 
+        UpdateLocationCountDownTimer.cancel();
+        findViewById(R.id.btnGoToHelp).setVisibility(View.INVISIBLE);
+        findViewById(R.id.BtnGoToMap).setVisibility(View.VISIBLE);
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.btnGoToHelp).setAnimation(a);
         view.startAnimation(a);
-        findViewById(R.id.btnGoToHelp).setVisibility(View.INVISIBLE);
-        findViewById(R.id.BtnGoToMap).setVisibility(View.VISIBLE);
+
         Fragment HFragment = new HelpFragment();
         FragmentTransaction t = getFragmentManager().beginTransaction();
         t.replace(R.id.map, HFragment);
@@ -134,31 +154,25 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
+
+    public void goToMap(View view) {
+
+        GoTo.ActivityTransitions(this, Map.class);
+    }
+
+
+
     public void goToCapture(View view) {
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.btnGoTakePict).setAnimation(a);
         view.startAnimation(a);
-        SaveMapData();
+
         UpdateLocationCountDownTimer.cancel();
-        Intent myIntent = new Intent(Map.this, SendActivity.class);
-        Map.this.startActivity(myIntent);
+        SaveMapData();
+        GoTo.ActivityTransitions(this, SendActivity.class);
     }
 
 
-
-    public void goToMainActivity(View view) {
-        Intent myIntent = new Intent(Map.this, MainActivity.class);
-        Map.this.startActivity(myIntent);
-    }
-
-    public void goToMap(View view) {
-        final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
-        findViewById(R.id.BtnGoToMap).setAnimation(a);
-        view.startAnimation(a);
-        findViewById(R.id.BtnGoToMap).setVisibility(View.VISIBLE);
-        Intent myIntent = new Intent(Map.this, Map.class);
-        Map.this.startActivity(myIntent);
-    }
 
     public void SaveMapData() {
         SaveData = getSharedPreferences(TicketData, 0);

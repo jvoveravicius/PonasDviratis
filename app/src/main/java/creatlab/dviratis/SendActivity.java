@@ -3,6 +3,7 @@ package creatlab.dviratis;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -53,19 +54,22 @@ import java.util.Set;
 
 public class SendActivity extends AppCompatActivity {
 
-    Logs Log = new Logs();
-    private static final int CAMERA_REQUEST = 1888; // field
+
     Context context = this;
-
-
-    ImageView buckysImageView;
-    private SharedPreferences SaveData;
-    public static String TicketData = "TicketData";
-
     Bitmap picture;
-    private LruCache<String, Bitmap> mMemoryCache;
+
+    public String pictureImagePath = "";
+    public static String TicketData = "TicketData";
+    public SharedPreferences SaveData;
+    public LruCache<String, Bitmap> mMemoryCache;
+
+    private static final int CAMERA_REQUEST = 1888;
+    public final String  CAMERA_DATA = "Camera";
     private String ReturnedSaveData;
 
+    Logs Log = new Logs();
+    Transitions GoTo = new Transitions();
+    SaveData Save = new SaveData(this);
 
 
     @Override
@@ -74,46 +78,18 @@ public class SendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send);
 
+        takePictureFromPhoto();
+        getSaveData();
 
-        String InitialText ="Nurodykite kritiškumą ir spauskite siųsti.";
-
-        buckysImageView = findViewById(R.id.buckysImageView);
-
-
-        if (!hasCamera()){
-
-            Log.Assert("Need to add fragment");
-        }
-        else{
-
-            Log.Print(0, "Camera activated");
-            takePicture();
-            getSaveData();
-
-            TextView ToView = (TextView)findViewById(R.id.ExplanationTextView);
-            ToView.setText(InitialText);
-
-        }
-
-        // Get max available VM memory, exceeding this amount will throw an
-        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
-        // int in its constructor.
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
         final int cacheSize = maxMemory / 8;
 
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
                 return bitmap.getByteCount() / 1024;
             }
         };
-
-
-
 
 
     }
@@ -135,20 +111,10 @@ public class SendActivity extends AppCompatActivity {
     }
 
 
-
-
-    private boolean hasCamera(){
-
-        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
-
-    }
-
     public void goToMapActivity(View view) {
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.closeSendActivity).setAnimation(a);
-        Intent myIntent = new Intent(SendActivity.this, Map.class);
-        SendActivity.this.startActivity(myIntent);
-
+        GoTo.ActivityTransitions(this, Map.class);
     }
 
 
@@ -161,30 +127,34 @@ public class SendActivity extends AppCompatActivity {
         SendEmail();
 
     }
-    private String pictureImagePath = "";
-
-    public void takePicture() {
 
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp + ".jpg";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
-        File file = new File(pictureImagePath);
-        Uri outputFileUri = Uri.fromFile(file);
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-        startActivityForResult(cameraIntent, 1);
 
-        /*
+    public void takePictureFromPhoto() {
 
-        Intent cameraIntent = new  Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
 
-        */
+            Log.Print(0, "Camera activated");
+
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = timeStamp + ".jpg";
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
+            File file = new File(pictureImagePath);
+            Uri outputFileUri = Uri.fromFile(file);
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            startActivityForResult(cameraIntent, 1);
+        }
+        else{
+
+            GoTo.ActivityTransitions(this, Map.class);
+
+        }
 
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,7 +166,6 @@ public class SendActivity extends AppCompatActivity {
             if(imgFile.exists()){
                 picture = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
-                // save bitmap to cache directory
                 try {
 
                     File cachePath = new File(context.getCacheDir(), "images");
@@ -209,37 +178,20 @@ public class SendActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-
-                ImageView myImage = (ImageView) findViewById(R.id.buckysImageView);
+                ImageView myImage = (ImageView) findViewById(R.id.SendImageView);
                 myImage.setImageBitmap(picture);
 
             }
-        }
+            else{
 
-        /*
-
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-
-            picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this
-
-            buckysImageView.setImageBitmap(picture); //for example I put bmp in an ImageView;
-
-            // save bitmap to cache directory
-            try {
-
-                File cachePath = new File(context.getCacheDir(), "images");
-                cachePath.mkdirs(); // don't forget to make the directory
-                FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
-                picture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                stream.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
+                GoTo.ActivityTransitions(this, Map.class);
+                Log.Print(0, "Image not received!");
             }
         }
 
-        */
+
     }
+
 
 
     public void getSaveData() {
@@ -263,9 +215,7 @@ public class SendActivity extends AppCompatActivity {
         ToView.setText(MainString);
         ReturnedSaveData = MainString;
 
-
     }
-
 
 
     void SendEmail(){
@@ -276,8 +226,6 @@ public class SendActivity extends AppCompatActivity {
         String Priority = "Kliūties kritiškumas yra "+RadioButtonValue+".\n\n";
 
         String[] TO = {"juozas.voveravicius@gmail.com"};
-        //String[] CC = {""};
-
 
         File imagePath = new File(context.getCacheDir(), "images");
         File newFile = new File(imagePath, "image.png");
@@ -303,9 +251,7 @@ public class SendActivity extends AppCompatActivity {
                         "There is no email client installed.", Toast.LENGTH_SHORT).show();
             }
 
-
         }
-
 
 
     }
