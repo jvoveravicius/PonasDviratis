@@ -6,11 +6,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -59,6 +61,8 @@ public class SendActivity extends AppCompatActivity {
     Bitmap picture;
 
     public String pictureImagePath = "";
+
+
     public static String TicketData = "TicketData";
     public SharedPreferences SaveData;
     public LruCache<String, Bitmap> mMemoryCache;
@@ -128,7 +132,9 @@ public class SendActivity extends AppCompatActivity {
 
     }
 
-
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    Uri fileUri;
+    String photoPath = "";
 
     public void takePictureFromPhoto() {
 
@@ -136,15 +142,39 @@ public class SendActivity extends AppCompatActivity {
 
             Log.Print(0, "Camera activated");
 
+            /*
+
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String imageFileName = timeStamp + ".jpg";
             File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+
+
             pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
+
+
+
             File file = new File(pictureImagePath);
             Uri outputFileUri = Uri.fromFile(file);
+
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             startActivityForResult(cameraIntent, 1);
+
+            */
+
+
+            //https://stackoverflow.com/questions/34504717/android-app-crashes-on-onactivityresult-while-using-camera-intent/34546718
+
+            String fileName = System.currentTimeMillis()+".jpg";
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.TITLE, fileName);
+            fileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            startActivityForResult(intent, 1);
+
         }
         else{
 
@@ -162,7 +192,13 @@ public class SendActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1) {
-            File imgFile = new  File(pictureImagePath);
+
+           // File imgFile = new  File(pictureImagePath);
+
+            photoPath = getPath(fileUri);
+            File imgFile = new  File(photoPath);
+
+            //File imgFile = new  File(pictureImagePath);
             if(imgFile.exists()){
                 picture = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
@@ -190,6 +226,27 @@ public class SendActivity extends AppCompatActivity {
         }
 
 
+
+    }
+
+    @SuppressWarnings("deprecation")
+    private String getPath(Uri selectedImaeUri)
+    {
+        String[] projection = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = managedQuery(selectedImaeUri, projection, null, null,
+                null);
+
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+            return cursor.getString(columnIndex);
+        }
+
+        return selectedImaeUri.getPath();
     }
 
 

@@ -45,19 +45,33 @@ public class GPSTracking {
     public double GeoPosition(char coord){
 
         double val = 0;
+
+        double latidute = 0;
+        double longitude = 0;
+
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
         if (checkLocationPermission()){
 
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location GPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location Network = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if(GPS!=null){
+                latidute = GPS.getLatitude();
+                longitude = GPS.getLongitude();
+            }
+            else if (Network!=null){
+                latidute = Network.getLatitude();
+                longitude = Network.getLongitude();
+            }
 
             if (coord=='a'){
-                val = location.getLatitude();
+                val = latidute;
                 log.Print(0, "getLatitude "+val);
             }
             else if (coord=='b'){
 
-                val = location.getLongitude();
+                val = longitude;
                 log.Print(0, "getLatitude "+val);
 
             }

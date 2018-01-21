@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Transitions GoTo = new Transitions();
 
     CountDownTimer DelayTick;
+    private int perm = 0;
 
 
     @Override
@@ -30,28 +31,44 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CallPermissions();
+
+        if (!GPS.checkLocationPermission()) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION);
+
+        }
+
+        Transition();
 
     }
 
 
+
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-        if (requestCode == REQUEST_PERMISSION) {
+            int test = grantResults[0];
+            String str = Integer.toString(test);
 
-            if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.Print(0, "RESULT" + str);
+            perm++;
 
-                Log.Print(0, permissions+ " [Permission has been granted]");
+            if (perm==1){
 
-            } else {
+                if (!Save.checkExternalStoragePermission()) {
 
-                Log.Print(0, permissions+ " [Permission has been denied]");
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+
+                }
+
+            }
+            else if (perm==2){
+
+                ShowPermissionsInformation();
 
             }
 
-            ShowPermissionsInformation();
 
-        }
+            Log.Print(0, "WWWWWWWW" + perm);
 
     }
 
@@ -73,34 +90,22 @@ public class MainActivity extends AppCompatActivity {
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 
+
         return cm.getActiveNetworkInfo() != null;
     }
 
 
-    private void CallPermissions(){
+    private void Transition(){
 
 
         short it = 0;
 
-        if (!GPS.checkLocationPermission()) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
-
-        }
-        else{
-
+        if (GPS.checkLocationPermission()) {
             it++;
         }
 
-        if (!Save.checkExternalStoragePermission()) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-
-        }
-        else{
-
+        if (Save.checkExternalStoragePermission()) {
             it++;
-
         }
 
         if (it == 2){
@@ -150,7 +155,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
 
-            GoTo.ActivityTransitions(this, Map.class);
+            //GoTo.ActivityTransitions(this, Map.class);
+            Transition();
 
         }
 
