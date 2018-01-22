@@ -60,20 +60,18 @@ public class SendActivity extends AppCompatActivity {
     Context context = this;
     Bitmap picture;
 
-    public String pictureImagePath = "";
-
-
     public static String TicketData = "TicketData";
     public SharedPreferences SaveData;
     public LruCache<String, Bitmap> mMemoryCache;
 
-    private static final int CAMERA_REQUEST = 1888;
-    public final String  CAMERA_DATA = "Camera";
     private String ReturnedSaveData;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    Uri fileUri;
+    String photoPath = "";
 
     Logs Log = new Logs();
     Transitions GoTo = new Transitions();
-    SaveData Save = new SaveData(this);
 
 
     @Override
@@ -132,39 +130,13 @@ public class SendActivity extends AppCompatActivity {
 
     }
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    Uri fileUri;
-    String photoPath = "";
+
 
     public void takePictureFromPhoto() {
 
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
 
             Log.Print(0, "Camera activated");
-
-            /*
-
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = timeStamp + ".jpg";
-            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-
-
-
-            pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
-
-
-
-            File file = new File(pictureImagePath);
-            Uri outputFileUri = Uri.fromFile(file);
-
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            startActivityForResult(cameraIntent, 1);
-
-            */
-
-
-            //https://stackoverflow.com/questions/34504717/android-app-crashes-on-onactivityresult-while-using-camera-intent/34546718
 
             String fileName = System.currentTimeMillis()+".jpg";
             ContentValues values = new ContentValues();
@@ -173,7 +145,7 @@ public class SendActivity extends AppCompatActivity {
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
 
         }
         else{
@@ -224,7 +196,6 @@ public class SendActivity extends AppCompatActivity {
                 Log.Print(0, "Image not received!");
             }
         }
-
 
 
     }
