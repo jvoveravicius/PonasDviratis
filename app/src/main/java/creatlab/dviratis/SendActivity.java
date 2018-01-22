@@ -245,6 +245,11 @@ public class SendActivity extends AppCompatActivity {
 
     }
 
+    void SaveAllData(){
+
+        
+    }
+
 
     void SendEmail(){
 

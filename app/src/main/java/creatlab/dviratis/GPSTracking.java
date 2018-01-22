@@ -72,7 +72,7 @@ public class GPSTracking {
             else if (coord=='b'){
 
                 val = longitude;
-                log.Print(0, "getLatitude "+val);
+                log.Print(0, "getLongitude "+val);
 
             }
             else{

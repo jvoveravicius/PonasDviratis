@@ -37,6 +37,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
     public static String TicketData = "TicketData";
     public static String  MarkerText = "Jūsų pozicija";
+    public static String  WarningMarkerText = "Pažymėta vieta";
     private static final int CAMERA_REQUEST = 1888;
     float MinZoom = 15.00f;
 
@@ -89,7 +90,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     }
 
     private void UpdataMarker(){
-        Log.Print(0, "Coordinates updated to "+Gps.GeoPosition('a')+" "+Gps.GeoPosition('b'));
+        Log.Print(0, "UpdataMarker Coordinates updated to "+Gps.GeoPosition('a')+" "+Gps.GeoPosition('b'));
         LatLng myPosition = new LatLng(Gps.GeoPosition('a'), Gps.GeoPosition('b'));
         mMap.clear();
         mMap.setMinZoomPreference(MinZoom);
@@ -98,6 +99,17 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)
                 ));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
+    }
+
+
+    private void AddProblemMarker(Double Latitude, Double Longitude){
+
+        Log.Print(0, "AddProblemMarker Coordinates updated to "+Gps.GeoPosition('a')+" "+Gps.GeoPosition('b'));
+        LatLng myPosition = new LatLng(Latitude, Longitude);
+        mMap.addMarker(new MarkerOptions()
+                .position(myPosition).title(WarningMarkerText)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.warning_marker)
+                ));
     }
 
 
@@ -163,6 +175,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
 
 
     public void goToCapture(View view) {
+
         final Animation a = AnimationUtils.loadAnimation(this, R.anim.onclick);
         findViewById(R.id.btnGoTakePict).setAnimation(a);
         view.startAnimation(a);
@@ -170,6 +183,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
         UpdateLocationCountDownTimer.cancel();
         SaveMapData();
         GoTo.ActivityTransitions(this, SendActivity.class);
+
     }
 
 
