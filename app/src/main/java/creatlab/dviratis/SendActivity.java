@@ -1,56 +1,30 @@
 package creatlab.dviratis;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.IdRes;
-import android.support.constraint.solver.Cache;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatRadioButton;
-import android.util.Base64;
 import android.util.LruCache;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -245,10 +219,6 @@ public class SendActivity extends AppCompatActivity {
 
     }
 
-    void SaveAllData(){
-
-        
-    }
 
 
     void SendEmail(){
@@ -258,7 +228,7 @@ public class SendActivity extends AppCompatActivity {
         String Greetings = "Sveiki, \n\n Vilniaus mieste užfiksuota kliūtis dviratininkams, kuri trukdo saugiam dviratininkų eismui. \nNuotrauka su kliūtimi prikabinta prie laiško.\n\n";
         String Priority = "Kliūties kritiškumas yra "+RadioButtonValue+".\n\n";
 
-        String[] TO = {"juozas.voveravicius@gmail.com"};
+        String[] TO = {"dviraciai@vilnius.lt","e.vicemeras@vilnius.lt"};
 
         File imagePath = new File(context.getCacheDir(), "images");
         File newFile = new File(imagePath, "image.png");

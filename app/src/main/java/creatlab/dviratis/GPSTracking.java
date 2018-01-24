@@ -1,12 +1,15 @@
 package creatlab.dviratis;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -21,11 +24,14 @@ public class GPSTracking {
     LocationManager locationManager;
 
 
+
+    @SuppressLint("MissingPermission")
     public GPSTracking(Context mContext) {
         //need to make construct to pass all content. Didn't find better solution
         this.mContext = mContext;
 
     }
+
 
 
     public boolean checkLocationPermission(){
@@ -51,10 +57,12 @@ public class GPSTracking {
 
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
+
         if (checkLocationPermission()){
 
             Location GPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             Location Network = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
 
             if(GPS!=null){
                 latidute = GPS.getLatitude();

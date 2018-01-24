@@ -69,6 +69,33 @@ public class SaveData {
     }
 
 
+
+    public int LoadStringArrayValue(String SaveDataName){
+
+        int Result = 0;
+
+        SaveData = SaveContext.getSharedPreferences(SaveDataName, 0);
+
+        Set<String> numbers = new HashSet<String>();
+        numbers = SaveData.getStringSet(SaveDataName, null);
+
+        if (numbers!=null){
+            for (String num : numbers){
+
+                Result++;
+
+            }
+        }
+
+        return Result;
+
+    }
+
+
+
+
+
+
     public String[] LoadStringArrayData(String SaveDataName, int Arr){
 
         String[] Result = new String[Arr];

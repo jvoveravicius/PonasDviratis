@@ -37,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION);
 
         }
+        else if (!Save.checkExternalStoragePermission()) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+
+        }
+
 
         Transition();
 
@@ -108,12 +114,22 @@ public class MainActivity extends AppCompatActivity {
             it++;
         }
 
+        if (GPS.checkLocationPermission() && Save.checkExternalStoragePermission()){
+
+            Log.Print(0, "All permission was granted!");
+            Delay();
+
+        }
+
+        /*
+
         if (it == 2){
 
             Log.Print(0, "All permission was granted!");
             Delay();
 
         }
+        */
 
 
     }
